@@ -31,6 +31,11 @@
     {
       overlay = final: prev: {};
 
+      ciNix = flake-compat-ci.lib.recurseIntoFlakeWith {
+        flake = self;
+        systems = [ "x86_64-linux" ];
+      };
+
       checks = forAllSystems (system:
         with nixpkgsFor.${system};
         lib.optionalAttrs stdenv.isLinux {
