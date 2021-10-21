@@ -104,6 +104,37 @@
         "type": "path"
       }
     },
+    "flake-compat": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1627913399,
+        "narHash": "sha256-hY8g6H2KFL8ownSiFeMOjwPC8P0ueXpCVEbxgda3pko=",
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "rev": "12c64ca55c1014cdc1b16ed5a804aa8576601ff2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "type": "github"
+      }
+    },
+    "flake-compat-ci": {
+      "locked": {
+        "lastModified": 1629629549,
+        "narHash": "sha256-c6Hipyp52MZ2pTFXEIRdcLK2rtKt9jggCQ7ZOgBS44k=",
+        "owner": "hercules-ci",
+        "repo": "flake-compat-ci",
+        "rev": "ef10daf1cb1823086ed547d39806aaca4c53cc17",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "flake-compat-ci",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "locked": {
         "lastModified": 1623875721,
@@ -341,6 +372,8 @@
     "root": {
       "inputs": {
         "cardano-node": "cardano-node",
+        "flake-compat": "flake-compat",
+        "flake-compat-ci": "flake-compat-ci",
         "nixpkgs": "nixpkgs"
       }
     },
