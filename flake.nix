@@ -57,6 +57,7 @@
 
                 testScript = ''
                   start_all()
+                  client.succeed("echo hello")
                   client.wait_for_unit("cardano-node.service")
                   client.wait_for_open_port("3001")
                 '';
