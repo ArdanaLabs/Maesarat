@@ -1,10 +1,17 @@
 {
   description = "A Stress-Testing Tool for Cardano Dapps ";
 
-  inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-21.05";
-  inputs.cardano-node.url = "github:input-output-hk/cardano-node/1.30.1";
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-21.05";
+    cardano-node.url = "github:input-output-hk/cardano-node/1.30.1";
+    flake-compat-ci.url = "github:hercules-ci/flake-compat-ci";
+    flake-compat = {
+      url = "github:edolstra/flake-compat";
+      flake = false;
+    };
+  };
 
-  outputs = { self, nixpkgs, cardano-node }:
+  outputs = { self, nixpkgs, flake-compat, flake-compat-ci, cardano-node }:
     let
 
       # Generate a user-friendly version number.
