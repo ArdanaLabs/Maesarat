@@ -50,7 +50,6 @@
                 nodes = {
                   client = { config, pkgs, ... }: {
                     imports = [ cardano-node.nixosModules.cardano-node ];
-                    environment.systemPackages = [ pkgs.curl ];
                     services.cardano-node.enable = true;
                     services.cardano-node.instances = 1;
                   };
