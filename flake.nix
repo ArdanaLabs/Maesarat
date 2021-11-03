@@ -3,7 +3,9 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-21.05";
-    cardano-node.url = "github:input-output-hk/cardano-node/1.30.1";
+    cardano-node = {
+      url = "github:input-output-hk/cardano-node/1.31.0";
+    };
     flake-compat-ci.url = "github:hercules-ci/flake-compat-ci";
     flake-compat = {
       url = "github:edolstra/flake-compat";
@@ -50,8 +52,16 @@
                 nodes = {
                   client = { config, pkgs, ... }: {
                     imports = [ cardano-node.nixosModules.cardano-node ];
-                    services.cardano-node.enable = true;
-                    services.cardano-node.instances = 1;
+                    services.cardano-node = {
+                      enable = true;
+                      forceHardForks = {
+                        shelley = 0;
+                        allegra = 0;
+                        mary    = 0;
+                        alonzo  = 0;
+                      };
+                    extraNodeConfig = {};
+                    };
                   };
                 };
 
