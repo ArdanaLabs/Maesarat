@@ -28,6 +28,32 @@
       # Nixpkgs instantiated for supported system types.
       nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; overlays = [ self.overlay ]; });
 
+      # Haskell
+      mkHaskellPkg = system: returnShellEnv:
+        let
+          pkgs = import nixpkgs { inherit system; };
+          compilerVersion = "ghc8107";
+          compiler = pkgs.haskell.packages."${compilerVersion}";
+        in
+        compiler.developPackage {
+          inherit returnShellEnv;
+          name = "maesarat";
+          root = ./haskell;
+          # See https://github.com/NixOS/nixpkgs/issues/82245
+          withHoogle = false;
+          modifier = drv:
+            pkgs.haskell.lib.addBuildTools drv (with pkgs.haskellPackages; [
+              cabal-fmt
+              cabal-install
+              cabal-plan
+              haskell-language-server
+              hlint
+              ghcid
+              ormolu
+              pkgs.zlib
+            ]);
+        };
+
     in
 
     {
@@ -74,5 +100,7 @@
               };
             in test;
         });
+
+        devShell = forAllSystems (system: mkHaskellPkg system true);
     };
 }
