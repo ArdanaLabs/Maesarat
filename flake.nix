@@ -78,6 +78,8 @@
             in test;
         });
 
+        defaultPackage = forAllSystems (system: self.devShells.${system}.default.overrideAttrs (old: { returnShellEnv = false; }));
+
         devShell = forAllSystems (system: self.devShells.${system}.default);
 
         devShells = forAllSystems (system:
