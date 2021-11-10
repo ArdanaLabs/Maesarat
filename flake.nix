@@ -28,31 +28,8 @@
       # Nixpkgs instantiated for supported system types.
       nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; overlays = [ self.overlay ]; });
 
-      # Haskell
-      mkHaskellPkg = system: returnShellEnv:
-        let
-          pkgs = import nixpkgs { inherit system; };
-          compilerVersion = "ghc8107";
-          compiler = pkgs.haskell.packages."${compilerVersion}";
-        in
-        compiler.developPackage {
-          inherit returnShellEnv;
-          name = "maesarat";
-          root = ./haskell;
-          # See https://github.com/NixOS/nixpkgs/issues/82245
-          withHoogle = false;
-          modifier = drv:
-            pkgs.haskell.lib.addBuildTools drv (with pkgs.haskellPackages; [
-              cabal-fmt
-              cabal-install
-              cabal-plan
-              haskell-language-server
-              hlint
-              ghcid
-              ormolu
-              pkgs.zlib
-            ]);
-        };
+      # The GHC compiler version to use, from haskell.packages.<compiler>
+      compiler = "ghc8107";
 
     in
 
@@ -101,6 +78,31 @@
             in test;
         });
 
-        devShell = forAllSystems (system: mkHaskellPkg system true);
+        devShell = forAllSystems (system: self.devShells.${system}.default);
+
+        devShells = forAllSystems (system:
+          let
+            pkgs = nixpkgsFor."${system}";
+          in rec
+          {
+            default = pkgs.haskell.packages."${compiler}".developPackage {
+              returnShellEnv = true;
+              name = "maesarat";
+              root = ./haskell;
+              # See https://github.com/NixOS/nixpkgs/issues/82245
+              withHoogle = false;
+              modifier = drv:
+                pkgs.haskell.lib.addBuildTools drv (with pkgs.haskellPackages; [
+                  cabal-fmt
+                  cabal-install
+                  cabal-plan
+                  haskell-language-server
+                  hlint
+                  ghcid
+                  ormolu
+                  pkgs.zlib
+                ]);
+              };
+          });
     };
 }
