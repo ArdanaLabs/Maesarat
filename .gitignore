@@ -2,4 +2,7 @@
 *strace*
 
 # haskell
+*local-haddock*
+*cabal.project.local*
 *dist-newstyle*
+*stack-work*

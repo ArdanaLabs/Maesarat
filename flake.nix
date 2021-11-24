@@ -29,7 +29,7 @@
       nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; overlays = [ self.overlay ]; });
 
       # The GHC compiler version to use, from haskell.packages.<compiler>
-      compiler = "ghc8107";
+      compiler = "ghc8104";
 
     in
 
@@ -91,8 +91,6 @@
               returnShellEnv = true;
               name = "maesarat";
               root = ./haskell;
-              # See https://github.com/NixOS/nixpkgs/issues/82245
-              withHoogle = false;
               modifier = drv:
                 pkgs.haskell.lib.addBuildTools drv (with pkgs.haskellPackages; [
                   cabal-fmt
@@ -104,7 +102,8 @@
                   ormolu
                   pkgs.zlib
                 ]);
-              };
-          });
+            };
+          }
+        );
     };
 }
