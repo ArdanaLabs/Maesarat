@@ -4,7 +4,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-21.05";
     cardano-node = {
-      url = "github:input-output-hk/cardano-node/1.31.0";
+      url = "github:input-output-hk/cardano-node/1.33.0";
     };
     flake-compat-ci.url = "github:hercules-ci/flake-compat-ci";
     flake-compat = {
@@ -54,25 +54,24 @@
                 name = "cardano-testnet";
                 nodes = {
                   client = { config, pkgs, ... }: {
-                    imports = [ cardano-node.nixosModules.cardano-node ];
-                    services.cardano-node = {
-                      enable = true;
-                      forceHardForks = {
-                        shelley = 0;
-                        allegra = 0;
-                        mary    = 0;
-                        alonzo  = 0;
-                      };
-                    extraNodeConfig = {};
-                    };
+                    environment.systemPackages = [ cardano-node.packages.${system}.cardano-cli cardano-node.packages.${system}.cardano-node ];
                   };
                 };
 
-                testScript = ''
+                testScript = 
+                let
+                  runTestnet = pkgs.writeScript "thing" ''
+                    cp -r ${cardano-node} ./cardano-node
+                    chmod -R 777 ./cardano-node
+                    cd cardano-node
+                    ./scripts/byron-to-alonzo/mkfiles.sh alonzo
+                    ./example/run/all.sh
+                  '';
+                in
+                ''
                   start_all()
-                  client.succeed("echo hello")
-                  client.wait_for_unit("cardano-node.service")
-                  client.wait_for_open_port("3001")
+                  client.wait_for_unit("multi-user.target")
+                  client.succeed("${runTestnet} >&2")
                 '';
               };
             in test;
