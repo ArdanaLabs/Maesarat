@@ -1,7 +1,0 @@
-cradle:
-  cabal:
-    - path: "./src"
-      component: "lib:maesarat"
-
-    - path: "./app/Main.hs"
-      component: "maesarat:exe:maesarat"
